@@ -1,6 +1,8 @@
 package Dao;
 
+import models.DepartmentNews;
 import models.Departments;
+import models.News;
 import models.Users;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -83,6 +85,41 @@ public class Sql2oDepartmentsDaoTest {
         assertEquals(department,sql2oDepartmentsDao.findById(department.getId()));
         assertEquals(otherDepartment,sql2oDepartmentsDao.findById(otherDepartment.getId()));
 
+    }
+    @Test
+    public void getAllUsersInDepartment() {
+        Departments department=setUpNewDepartment();
+        sql2oDepartmentsDao.add(department);
+        Users user=setUpNewUser();
+        Users otherUser= new Users("Dennis","treasury","cash transfers");
+        sql2oUsersDao.add(user);
+        sql2oUsersDao.add(otherUser);
+        sql2oDepartmentsDao.addUserToDepartment(user,department);
+        sql2oDepartmentsDao.addUserToDepartment(otherUser,department);
+        assertEquals(2,sql2oDepartmentsDao.getAllUsersInDepartment(department.getId()).size());
+        assertEquals(2,sql2oDepartmentsDao.findById(department.getId()).getSize());
+    }
+    @Test
+    public void getDepartmentNews() {
+        Users users=setUpNewUser();
+        sql2oUsersDao.add(users);
+        Departments departments=setUpNewDepartment();
+        sql2oDepartmentsDao.add(departments);
+        Department_News department_news =new DepartmentNews("Meeting","To nominate new chairman",departments.getId()
+                ,users.getId());
+        sql2oNewsDao.addDepartmentNews(department_news);
+        News news=new News("Meeting","Meeting to set activities for team building",users.getId());
+        sql2oNewsDao.addNews(news);
+
+        assertEquals(department_news.getTitle(),sql2oDepartmentsDao.getDepartmentNews(department_news.getId()).get(0).getTitle());
+    }
+
+    private Departments setUpNewDepartment() {
+        return new Departments("pata pesa", "microfinance");
+    }
+
+    private Users setUpNewUser() {
+        return new Users("David", "Manager", "Managing Director");
     }
 
 }
