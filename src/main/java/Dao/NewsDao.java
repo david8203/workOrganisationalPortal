@@ -8,15 +8,17 @@ import java.util.List;
 
 public interface NewsDao {
     //create
-    void add(Departments department);
-    void addUserToDepartment(Users user, Departments department);
+    //create
+    void addNews(News news);
+    void addDepartmentNews(Department_News department_news);
+
     //read
 
-    List<Departments> getAll();
-    Departments findById(int id);
-    List<Users> getAllUsersInDepartment(int department_id);
-    List<News> getDepartmentNews(int id);
+    List<News> getAll();
+    News findById(int id);
+
     //update
     //delete
+
     void clearAll();
 }
