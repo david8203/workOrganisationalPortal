@@ -1,6 +1,7 @@
 package Dao;
 
 import models.Departments;
+import models.News;
 import models.Users;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
@@ -90,5 +91,29 @@ public class Sql2oDepartmentsDao implements DepartmentsDao{
 
             return users;
         }
+    }
+    @Override
+    public List<News> getDepartmentNews(int id) {
+        try(Connection con=sql2o.open()) {
+            String sql="SELECT * FROM news WHERE id=:id ";
+            return con.createQuery(sql)
+                    .addParameter("id",id)
+                    .executeAndFetch(News.class);
+        }
+    }
+
+    @Override
+    public void clearAll() {
+        try (Connection con=sql2o.open()){
+            String sql="DELETE FROM departments";
+            String sqlUsersDepartments="DELETE FROM users_departments";
+            con.createQuery(sql).executeUpdate();
+            con.createQuery(sqlUsersDepartments).executeUpdate();
+
+        }catch (Sql2oException e){
+            System.out.println(e);
+        }
+
+
     }
 }
