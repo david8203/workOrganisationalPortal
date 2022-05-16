@@ -8,7 +8,7 @@ import org.sql2o.Sql2oException;
 
 import java.util.List;
 
-public class Sql2oNewsDao {
+public class Sql2oNewsDao implements NewsDao{
     private final Sql2o sql2o;
 
     public Sql2oNewsDao(Sql2o sql2o) {
@@ -36,7 +36,7 @@ public class Sql2oNewsDao {
             String sql="INSERT INTO news (news_type,department_id,user_id,title,description) VALUES (:news_type," +
                     ":department_id,:user_id,:title,:description)";
             int id= (int) con.createQuery(sql,true)
-                    .bind(departmentnews)
+                    .bind(department_news)
                     .executeUpdate()
                     .getKey();
             department_news.setId(id);

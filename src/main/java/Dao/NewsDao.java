@@ -1,5 +1,6 @@
 package Dao;
 
+import models.Department_News;
 import models.Departments;
 import models.News;
 import models.Users;
