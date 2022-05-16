@@ -1,5 +1,6 @@
 package Dao;
 
+import models.Departments;
 import models.Users;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -54,5 +55,42 @@ public class Sql2oUsersDaoTest {
         sql2oUsersDao.add(user);
         assertEquals(user.getName(),sql2oUsersDao.findById(user.getId()).getName());
     }
+    @Test
+    public void allInstancesAreReturned() {
 
+        Users users=setUpNewUser();
+        Users otherUser= new Users("Dennis","treasurer","Cash transfers");
+        sql2oUsersDao.add(users);
+        sql2oUsersDao.add(otherUser);
+        assertEquals(users.getName(),sql2oUsersDao.getAll().get(0).getName());
+        assertEquals(otherUser.getName(),sql2oUsersDao.getAll().get(1).getName());
+    }
+    @Test
+    public void getDepartmentsUserIsIn() {
+        Departments department=setUpNewDepartment();
+        Departments otherDepartment=new Departments("treasury","cash transfers");
+        sql2oDepartmentsDao.add(department);
+        sql2oDepartmentsDao.add(otherDepartment);
+        Users user=setUpNewUser();
+        Users otherUser= new Users("Dennis","treasury","cash transfers");
+        sql2oUsersDao.add(user);
+        sql2oUsersDao.add(otherUser);
+        sql2oDepartmentsDao.addUserToDepartment(user,department);
+        sql2oDepartmentsDao.addUserToDepartment(otherUser,department);
+        sql2oDepartmentsDao.addUserToDepartment(user,otherDepartment);
+        assertEquals(2,sql2oUsersDao.getAllUserDepartments(user.getId()).size());
+        assertEquals(1,sql2oUsersDao.getAllUserDepartments(otherUser.getId()).size());
+    }
+
+
+    //helper
+
+
+    private Departments setUpNewDepartment() {
+        return new Departments("pata pesa ", "microfinance");
+    }
+
+    private Users setUpNewUser() {
+        return new Users("David", "Manager", "Managing Director");
+    }
 }
