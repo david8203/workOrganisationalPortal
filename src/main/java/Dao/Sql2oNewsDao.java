@@ -6,6 +6,8 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
 
+import java.util.List;
+
 public class Sql2oNewsDao {
     private final Sql2o sql2o;
 
@@ -34,10 +36,45 @@ public class Sql2oNewsDao {
             String sql="INSERT INTO news (news_type,department_id,user_id,title,description) VALUES (:news_type," +
                     ":department_id,:user_id,:title,:description)";
             int id= (int) con.createQuery(sql,true)
-                    .bind(department_news)
+                    .bind(departmentnews)
                     .executeUpdate()
                     .getKey();
             department_news.setId(id);
+
+        }catch (Sql2oException e){
+            System.out.println(e);
+        }
+
+    }
+    @Override
+    public List<News> getAll() {
+        try(Connection con=sql2o.open()) {
+            String sql="SELECT * FROM news";
+            return con.createQuery(sql,true)
+                    .executeAndFetch(News.class);
+
+        }
+    }
+
+    @Override
+    public News findById(int id) {
+        try(Connection con=sql2o.open()) {
+            String sql="SELECT * FROM news WHERE id=:id";
+            return con.createQuery(sql)
+                    .addParameter("id",id)
+                    .executeAndFetchFirst(News.class);
+        }
+    }
+
+    @Override
+    public void clearAll() {
+        try (Connection con=sql2o.open()){
+            String sql="DELETE FROM departments";
+            String sqlNews="DELETE FROM news";
+            String sqlUsersDepartments="DELETE FROM users_departments";
+            con.createQuery(sql).executeUpdate();
+            con.createQuery(sqlUsersDepartments).executeUpdate();
+            con.createQuery(sqlNews).executeUpdate();
 
         }catch (Sql2oException e){
             System.out.println(e);
