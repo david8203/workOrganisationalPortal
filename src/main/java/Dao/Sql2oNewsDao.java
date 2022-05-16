@@ -1,6 +1,6 @@
 package Dao;
 
-import models.DepartmentNews;
+import models.Department_News;
 import models.News;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
@@ -31,7 +31,7 @@ public class Sql2oNewsDao {
 
     }
     @Override
-    public void addDepartmentNews(DepartmentNews department_news) {
+    public void addDepartmentNews(Department_News department_news) {
         try(Connection con=sql2o.open()) {
             String sql="INSERT INTO news (news_type,department_id,user_id,title,description) VALUES (:news_type," +
                     ":department_id,:user_id,:title,:description)";

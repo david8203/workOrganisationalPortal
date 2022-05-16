@@ -1,5 +1,6 @@
 package Dao;
 
+import models.Department_News;
 import models.Departments;
 import models.News;
 import models.Users;
@@ -55,5 +56,43 @@ public class Sql2oNewsDaoTest {
 
         assertEquals(users.getId(),sql2oNewsDao.findById(news.getId()).getUser_id());
         assertEquals(news.getDepartment_id(),sql2oNewsDao.findById(news.getId()).getDepartment_id());
+    }
+    @Test
+    public void addDepartmentNews() {
+        Users users=setUpNewUsers();
+        sql2oUsersDao.add(users);
+        Departments departments=setUpDepartment();
+        sql2oDepartmentsDao.add(departments);
+        Department_News department_news =new Department_News("Meeting","To nominate new chairman",departments.getId()
+                ,users.getId());
+        sql2oNewsDao.addDepartmentNews(department_news);
+        assertEquals(users.getId(),sql2oNewsDao.findById(department_news.getId()).getUser_id());
+        assertEquals(department_news.getDepartment_id(),sql2oNewsDao.findById(department_news.getId()).getDepartment_id());
+    }
+    @Test
+    public void getAll() {
+        Users users=setUpNewUsers();
+        sql2oUsersDao.add(users);
+        Departments departments=setUpDepartment();
+        sql2oDepartmentsDao.add(departments);
+        Department_News department_news =new Department_News("Meeting","To nominate new chairman",departments.getId()
+                ,users.getId());
+        sql2oNewsDao.addDepartmentNews(department_news);
+        News news=new News("Meeting","Meeting to set activities for team building",users.getId());
+        sql2oNewsDao.addNews(news);
+        assertEquals(2,sql2oNewsDao.getAll().size());
+    }
+    @Test
+    public void findById() {
+    }
+
+    //helper
+
+
+    private Departments setUpDepartment() {
+        return new Departments("pata pesa","microfinance");
+    }
+    private Users setUpNewUsers() {
+        return new Users("David", "Manager", "Managing Director");
     }
 }

@@ -1,6 +1,6 @@
 package Dao;
 
-import models.DepartmentNews;
+import models.Department_News;
 import models.Departments;
 import models.News;
 import models.Users;
@@ -105,7 +105,7 @@ public class Sql2oDepartmentsDaoTest {
         sql2oUsersDao.add(users);
         Departments departments=setUpNewDepartment();
         sql2oDepartmentsDao.add(departments);
-        Department_News department_news =new DepartmentNews("Meeting","To nominate new chairman",departments.getId()
+        Department_News department_news =new Department_News("Meeting","To nominate new chairman",departments.getId()
                 ,users.getId());
         sql2oNewsDao.addDepartmentNews(department_news);
         News news=new News("Meeting","Meeting to set activities for team building",users.getId());
