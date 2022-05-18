@@ -1,7 +1,10 @@
 import Dao.Sql2oDepartmentsDao;
 import Dao.Sql2oNewsDao;
 import Dao.Sql2oUsersDao;
+import Exceptions.ApiException;
 import com.google.gson.Gson;
+import models.Departments;
+import models.News;
 import models.Users;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
@@ -43,6 +46,51 @@ public class App {
             response.status(201);
             return gson.toJson(user);
         });
+        post("/departments/new","application/json",(request, response) -> {//tested................
+            Departments departments =gson.fromJson(request.body(),Departments.class);
+            sql2oDepartmentsDao.add(departments);
+            response.status(201);
+            return gson.toJson(departments);
+        });
+        //adding users to a specific department
+        post("/add/user/:user_id/department/:department_id","application/json",(request, response) -> {//tested......
+
+            int user_id=Integer.parseInt(request.params("user_id"));
+            int department_id=Integer.parseInt(request.params("department_id"));
+            Departments departments=sql2oDepartmentsDao.findById(department_id);
+            Users users=sql2oUsersDao.findById(user_id);
+            if(departments==null){
+                throw new ApiException(404, String.format("No department with the id: \"%s\" exists",
+                        request.params("department_id")));
+            }
+            if(users==null){
+                throw new ApiException(404, String.format("No user with the id: \"%s\" exists",
+                        request.params("user_id")));
+            }
+            sql2oDepartmentsDao.addUserToDepartment(users,departments);
+
+            List<Users> departmentUsers=sql2oDepartmentsDao.getAllUsersInDepartment(departments.getId());
+
+            response.status(201);
+            return gson.toJson(departmentUsers);
+        });
+        post("/news/new/department","application/json",(request, response) -> { //tested.......
+            News department_news =gson.fromJson(request.body(), News.class);
+            Departments departments=sql2oDepartmentsDao.findById(department_news.getDepartment_id());
+            Users users=sql2oUsersDao.findById(department_news.getUser_id());
+            if(departments==null){
+                throw new ApiException(404, String.format("No department with the id: \"%s\" exists",
+                        request.params("id")));
+            }
+            if(users==null){
+                throw new ApiException(404, String.format("No user with the id: \"%s\" exists",
+                        request.params("id")));
+            }
+            sql2oNewsDao.addNews(department_news);
+            response.status(201);
+            return gson.toJson(department_news);
+        });
+
     }
 
 }
