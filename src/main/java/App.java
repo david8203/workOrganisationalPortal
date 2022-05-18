@@ -9,7 +9,9 @@ import models.Users;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static spark.Spark.*;
 public class App {
@@ -191,6 +193,41 @@ public class App {
                 return gson.toJson(sql2oDepartmentsDao.findById(id));
             }
         });
+        get("/news/department/:id","application/json",(request, response) -> {//works
+
+            int id=Integer.parseInt(request.params("id"));
+            Departments departments=sql2oDepartmentsDao.findById(id);
+            if(departments==null){
+                throw new ApiException(404, String.format("No department with the id: \"%s\" exists",
+                        request.params("id")));
+            }
+            if(sql2oDepartmentsDao.getDepartmentNews(id).size()>0){
+                return gson.toJson(sql2oDepartmentsDao.getDepartmentNews(id));
+            }
+            else {
+                return "{\"RESPONSE\":\"THIS DEPARTMENT HAS NO NEWS CURRENTLY\"}";
+            }
+        });
+
+
+        //FILTERS
+        exception(ApiException.class, (exception, request, response) -> {
+            ApiException err = exception;
+            Map<String, Object> jsonMap = new HashMap<>();
+            jsonMap.put("status", err.getStatusCode());
+            jsonMap.put("errorMessage", err.getMessage());
+            response.type("application/json");
+            response.status(err.getStatusCode());
+            response.body(gson.toJson(jsonMap));
+        });
+
+
+        after((request, response) ->{
+            response.type("application/json");
+        });
+
+
+
     }
 
 }
