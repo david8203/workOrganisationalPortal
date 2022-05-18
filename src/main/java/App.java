@@ -108,6 +108,46 @@ public class App {
                 return "{\"RESPONSE\":\"NO USERS CURRENTLY\"}";
             }
         });
+        //path to show departments
+        get("/departments","application/json",(request, response) -> {//tested.............
+            if(sql2oDepartmentsDao.getAll().size()>0){
+                return gson.toJson(sql2oDepartmentsDao.getAll());
+            }
+            else {
+                return "{\"RESPONSE\":\"NO DEPARTMENTS CURRENTLY\"}";
+            }
+        });
+
+
+        //path to get listed general news
+        get("/news/general","application/json",(request, response) -> {//tested.....works!!
+            if(sql2oNewsDao.getAll().size()>0){
+                return gson.toJson(sql2oNewsDao.getAll());
+            }
+            else {
+                return "{\"RESPONSE\":\"NO NEWS AVAILABLE\"}";
+            }
+        });
+        //path to show departments
+        get("/departments","application/json",(request, response) -> {//tested.............
+            if(sql2oDepartmentsDao.getAll().size()>0){
+                return gson.toJson(sql2oDepartmentsDao.getAll());
+            }
+            else {
+                return "{\"RESPONSE\":\"NO DEPARTMENTS CURRENTLY\"}";
+            }
+        });
+
+
+        //path to get listed general news
+        get("/news/general","application/json",(request, response) -> {//tested.....works!!
+            if(sql2oNewsDao.getAll().size()>0){
+                return gson.toJson(sql2oNewsDao.getAll());
+            }
+            else {
+                return "{\"RESPONSE\":\"NO NEWS AVAILABLE\"}";
+            }
+        });
     }
 
 }
