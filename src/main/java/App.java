@@ -172,6 +172,25 @@ public class App {
                 return gson.toJson(sql2oUsersDao.findById(id));
             }
         });
+        get("/department/:id/users","application/json",(request, response) -> {//tested works............
+            int id=Integer.parseInt(request.params("id"));
+            if(sql2oDepartmentsDao.getAllUsersInDepartment(id).size()>0){
+                return gson.toJson(sql2oDepartmentsDao.getAllUsersInDepartment(id));
+            }
+            else {
+                return "{\"message\":\"I'm sorry, but department has no users.\"}";
+            }
+        });
+        get("/department/:id","application/json",(request, response) -> {//works.......
+            int id=Integer.parseInt(request.params("id"));
+            if(sql2oDepartmentsDao.findById(id)==null){
+                throw new ApiException(404, String.format("No department with the id: %s exists",
+                        request.params("id")));
+            }
+            else {
+                return gson.toJson(sql2oDepartmentsDao.findById(id));
+            }
+        });
     }
 
 }
