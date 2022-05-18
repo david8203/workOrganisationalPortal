@@ -151,6 +151,27 @@ public class App {
                 return "{\"RESPONSE\":\"NO NEWS AVAILABLE\"}";
             }
         });
+        //path to get each user department
+        get("/user/:id/departments","application/json",(request, response) -> {//tested ......works
+            int id=Integer.parseInt(request.params("id"));
+            if(sql2oUsersDao.getAllUserDepartments(id).size()>0){
+                return gson.toJson(sql2oUsersDao.getAllUserDepartments(id));
+            }
+            else {
+                return "{\"RESPONSE\":\"DEPARTMENT NOT AVAILABLE\"}";
+            }
+        });
+        //getting specific user..................
+        get("/user/:id", "application/json", (request, response) -> {//tested and works...........
+            int id=Integer.parseInt(request.params("id"));
+            if(sql2oUsersDao.findById(id)==null){
+                throw new ApiException(404, String.format("No user with the id: \"%s\" exists",
+                        request.params("id")));
+            }
+            else {
+                return gson.toJson(sql2oUsersDao.findById(id));
+            }
+        });
     }
 
 }
