@@ -90,7 +90,24 @@ public class App {
             response.status(201);
             return gson.toJson(department_news);
         });
+        post("/news/new/general","application/json",(request, response) -> {//tested
 
+            News news =gson.fromJson(request.body(),News.class);
+            sql2oNewsDao.addNews(news);
+            response.status(201);
+            return gson.toJson(news);
+        });
+        //getting users in the department
+
+        get("/users", "application/json", (request, response) -> {//tested
+
+            if(sql2oDepartmentsDao.getAll().size() > 0){
+                return gson.toJson(sql2oUsersDao.getAll());
+            }
+            else {
+                return "{\"RESPONSE\":\"NO USERS CURRENTLY\"}";
+            }
+        });
     }
 
 }
